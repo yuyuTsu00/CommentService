@@ -1,6 +1,5 @@
 package com.intuit.interview.commentservice.Controller;
 
-import com.intuit.interview.commentservice.Model.Like;
 import com.intuit.interview.commentservice.Repositories.PostRepository;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.bind.annotation.RequestMapping;
