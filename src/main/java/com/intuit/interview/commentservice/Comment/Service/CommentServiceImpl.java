@@ -117,16 +117,6 @@ public class CommentServiceImpl implements CommentService{
         }
     }
 
-    public List<Comment> getAllComments()
-    {
-        return commentRepository.findAll();
-    }
-
-    public List<CommentThread> getAllCommentThreads()
-    {
-        return commentThreadRepository.findAll();
-    }
-
     public Comment updateComment(Comment comment) throws CommentNotFoundException
     {
         Optional<Comment> dbcomment = commentRepository.findById(comment.getCommentId());
@@ -146,6 +136,12 @@ public class CommentServiceImpl implements CommentService{
     public PaginatedResponse<BasicDBObject> commentThreadsForPost(String postId, int start)
     {
         List<BasicDBObject> list = commentThreadRepository.commentThreadsForPost(postId, start, 100);
+        return PaginatedResponse.<BasicDBObject>builder().items(list).start(start+1).count(list.size()).build();
+    }
+
+    public PaginatedResponse<BasicDBObject> commentThreadsForComment(String threadId, int start)
+    {
+        List<BasicDBObject> list = commentThreadRepository.commentThreadsForComment(threadId, start, 100);
         return PaginatedResponse.<BasicDBObject>builder().items(list).start(start+1).count(list.size()).build();
     }
 }

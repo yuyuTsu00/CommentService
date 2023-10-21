@@ -1,9 +1,7 @@
 package com.intuit.interview.commentservice.User.Controller;
 
 import com.intuit.interview.commentservice.User.Exception.UserNotFoundException;
-import com.intuit.interview.commentservice.User.Repository.UserRepository;
 import com.intuit.interview.commentservice.User.Service.UserService;
-import com.intuit.interview.commentservice.User.Service.UserServiceImpl;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,7 +15,6 @@ import org.springframework.web.bind.annotation.RequestBody;
 import com.intuit.interview.commentservice.User.Model.User;
 
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("user")

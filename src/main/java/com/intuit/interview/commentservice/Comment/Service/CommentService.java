@@ -19,7 +19,6 @@ public interface CommentService extends EntityService {
     public Comment deleteComment(String commentId) throws CommentNotFoundException;
     public Comment addComment(Comment comment);
     public Comment updateComment(Comment comment) throws CommentNotFoundException;
-    public List<Comment> getAllComments();
-    public List<CommentThread> getAllCommentThreads();
     public PaginatedResponse<BasicDBObject> commentThreadsForPost(String postId, int start);
+    public PaginatedResponse<BasicDBObject> commentThreadsForComment(String threadId, int start);
 }

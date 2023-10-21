@@ -8,6 +8,7 @@ import lombok.ToString;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
+import java.io.Serializable;
 import java.time.Instant;
 import java.util.Date;
 
@@ -15,7 +16,7 @@ import java.util.Date;
 @Getter
 @Setter
 @ToString
-public class Post implements Entity {
+public class Post implements Entity, Serializable {
 
     @MongoId
     String postId;

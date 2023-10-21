@@ -1,12 +1,9 @@
 package com.intuit.interview.commentservice.Reaction.Controller;
 
 import com.intuit.interview.commentservice.Constants.Emotion;
-import com.intuit.interview.commentservice.Constants.EntityType;
 import com.intuit.interview.commentservice.EntityService;
 import com.intuit.interview.commentservice.Reaction.Model.Reaction;
 import com.intuit.interview.commentservice.Reaction.Repository.ReactionRepository;
-import com.intuit.interview.commentservice.Comment.Service.CommentService;
-import com.intuit.interview.commentservice.Post.Service.PostService;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 

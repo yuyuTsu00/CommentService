@@ -5,6 +5,10 @@ import com.intuit.interview.commentservice.Post.Exception.PostNotFoundException;
 import com.intuit.interview.commentservice.Post.Model.Post;
 import com.intuit.interview.commentservice.Reaction.Model.Reaction;
 import com.intuit.interview.commentservice.Post.Repository.PostRepository;
+import org.springframework.cache.annotation.CacheEvict;
+import org.springframework.cache.annotation.CachePut;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.*;
 
@@ -14,6 +18,7 @@ import java.util.List;
 import java.util.Optional;
 
 @Service
+@EnableCaching
 public class PostServiceImpl implements PostService
 {
     private final PostRepository postRepository;
@@ -22,6 +27,7 @@ public class PostServiceImpl implements PostService
         this.postRepository = postRepository;
     }
 
+    @Cacheable("post")
     public Post postDetails(String postId) throws PostNotFoundException
     {
         // fetch details from post table and return
@@ -33,6 +39,7 @@ public class PostServiceImpl implements PostService
         return post.get();
     }
 
+    @CacheEvict("post")
     public Post deletePost(String postId) throws PostNotFoundException
     {
         // remove post from table with given id
@@ -51,6 +58,8 @@ public class PostServiceImpl implements PostService
         // insert new post in the post table
         return postRepository.insert(post);
     }
+
+    @CachePut("post")
     public Post updatePost( Post post) throws PostNotFoundException
     {
         // update the already present post

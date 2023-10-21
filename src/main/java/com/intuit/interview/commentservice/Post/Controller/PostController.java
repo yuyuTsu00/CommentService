@@ -1,10 +1,7 @@
 package com.intuit.interview.commentservice.Post.Controller;
 
 import com.intuit.interview.commentservice.Post.Exception.PostNotFoundException;
-import com.intuit.interview.commentservice.Post.Repository.PostRepository;
 import com.intuit.interview.commentservice.Post.Service.PostService;
-import com.intuit.interview.commentservice.User.Exception.UserNotFoundException;
-import com.intuit.interview.commentservice.User.Model.User;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -17,10 +14,7 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import com.intuit.interview.commentservice.Post.Model.Post;
 
-import java.time.Instant;
-import java.util.Date;
 import java.util.List;
-import java.util.Optional;
 
 @RestController
 @RequestMapping("post")
