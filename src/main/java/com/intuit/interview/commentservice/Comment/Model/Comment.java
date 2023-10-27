@@ -1,7 +1,8 @@
 package com.intuit.interview.commentservice.Comment.Model;
 
 import com.intuit.interview.commentservice.Constants.EntityType;
-import com.intuit.interview.commentservice.Entity;
+import com.intuit.interview.commentservice.Entity.Entity;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -15,16 +16,14 @@ import java.util.Date;
 @Getter
 @Setter
 @ToString
+@Builder
 public class Comment implements Entity {
     @MongoId
-    String commentId;
-    String message;
-    String threadId;
-    String postId;
-    String userId;
-    int likeCounter = 0;
-    int dislikeCounter = 0;
-    String entityType = EntityType.COMMENT.toString();
-    Date postedOn = Date.from(Instant.now());
-    Date lastUpdatedON = Date.from(Instant.now());
+    private String commentId;
+    private String message;
+    private int likeCounter = 0;
+    private int dislikeCounter = 0;
+    private String entityType = EntityType.COMMENT.toString();
+    private Date postedOn = Date.from(Instant.now());
+    private Date lastUpdatedON = Date.from(Instant.now());
 }

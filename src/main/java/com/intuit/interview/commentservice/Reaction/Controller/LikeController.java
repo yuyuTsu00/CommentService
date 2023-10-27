@@ -1,7 +1,7 @@
 package com.intuit.interview.commentservice.Reaction.Controller;
 
 import com.intuit.interview.commentservice.Constants.Emotion;
-import com.intuit.interview.commentservice.EntityService;
+import com.intuit.interview.commentservice.Entity.EntityService;
 import com.intuit.interview.commentservice.Reaction.Model.Reaction;
 import com.intuit.interview.commentservice.Reaction.Repository.ReactionRepository;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -32,7 +32,7 @@ public class LikeController implements ReactionController {
     @Override
     public void undoneReaction(Reaction reaction) {
         EntityService entityService = reactionFactory.getInstance(reaction.getEntityType());
-        entityService.handleLike(reaction);
+        entityService.handleUndoLike(reaction);
         Reaction dbReaction = reactionRepository.getReactionByIds(reaction.getEntityId(), reaction.getUserId());
         if(dbReaction != null)
             reactionRepository.delete(dbReaction);

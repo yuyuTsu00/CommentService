@@ -1,8 +1,10 @@
 package com.intuit.interview.commentservice.User.Service;
 
+import com.intuit.interview.commentservice.User.DTO.UserDto;
 import com.intuit.interview.commentservice.User.Exception.UserNotFoundException;
 import com.intuit.interview.commentservice.User.Model.User;
 import com.intuit.interview.commentservice.User.Repository.UserRepository;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
@@ -15,6 +17,8 @@ import java.util.Optional;
 public class UserServiceImpl implements UserService
 {
     private final UserRepository userRepository;
+
+    @Autowired
     UserServiceImpl(UserRepository userRepository){
         this.userRepository = userRepository;
     }
@@ -34,7 +38,7 @@ public class UserServiceImpl implements UserService
     @Override
     public List<User> getAllUser()
     {
-        return userRepository.findAll();
+        return userRepository.getActiveUsers();
     }
 
     @Override
@@ -47,14 +51,17 @@ public class UserServiceImpl implements UserService
         if(user.isEmpty())
             throw new UserNotFoundException();
 
-        userRepository.delete(user.get());
+        user.get().setActive(false);
+        userRepository.save(user.get());
         return user.get();
     }
 
     @Override
-    public User newUser(User user)
+    public User newUser(UserDto user)
     {
         // insert new user in the user table
-        return userRepository.insert(user);
+        User newUser = new User();
+        newUser.setUserName(user.getUserName());
+        return userRepository.insert(newUser);
     }
 }

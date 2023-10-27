@@ -1,6 +1,8 @@
 package com.intuit.interview.commentservice.Post.Service;
 
 import com.intuit.interview.commentservice.Constants.Emotion;
+import com.intuit.interview.commentservice.CommonUtility.PaginatedResponse;
+import com.intuit.interview.commentservice.Post.DTO.NewPostDto;
 import com.intuit.interview.commentservice.Post.Exception.PostNotFoundException;
 import com.intuit.interview.commentservice.Post.Model.Post;
 import com.intuit.interview.commentservice.Reaction.Model.Reaction;
@@ -9,8 +11,8 @@ import org.springframework.cache.annotation.CacheEvict;
 import org.springframework.cache.annotation.CachePut;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.cache.annotation.EnableCaching;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.*;
 
 import java.time.Instant;
 import java.util.Date;
@@ -49,18 +51,22 @@ public class PostServiceImpl implements PostService
         if(post.isEmpty())
             throw new PostNotFoundException();
 
-        postRepository.delete(post.get());
+        post.get().setActive(false);
+        postRepository.save(post.get());
         return post.get();
     }
 
-    public Post newPost(Post post)
+    public Post newPost(NewPostDto post)
     {
         // insert new post in the post table
-        return postRepository.insert(post);
+        Post newPost = new Post();
+        newPost.setPostMessage(post.getMessage());
+        newPost.setUserId(post.getUserId());
+        return postRepository.insert(newPost);
     }
 
     @CachePut("post")
-    public Post updatePost( Post post) throws PostNotFoundException
+    public Post updatePost(Post post) throws PostNotFoundException
     {
         // update the already present post
         Optional<Post> dbpost = postRepository.findById(post.getPostId());
@@ -75,9 +81,10 @@ public class PostServiceImpl implements PostService
         return dbpost.get();
     }
 
-    public List<Post> getAllPostOfUser(String userId)
+    public PaginatedResponse<Post> getAllPostOfUser(String userId, Pageable pageable)
     {
-        return postRepository.getAllPostOfUser(userId);
+        List<Post> posts = postRepository.getAllPostOfUser(userId, pageable);
+        return PaginatedResponse.<Post>builder().items(posts).start(pageable.getPageNumber() + 1).count(posts.size()).build();
     }
 
     public void handleLike(Reaction reaction)
@@ -103,20 +110,13 @@ public class PostServiceImpl implements PostService
     private void handleAction(Reaction reaction, int change, Emotion emotion)
     {
         Optional<Post> post = postRepository.findById(reaction.getEntityId());
-        System.out.println(post);
         if(post.isPresent())
         {
             switch (emotion){
-                case LIKE : {
-                    post.get().setLikeCounter(post.get().getLikeCounter() + change);
-                    break;
-                }
-                case DISLIKE : {
-                    post.get().setDislikeCounter(post.get().getDislikeCounter() + change);
-                    break;
-                }
+                case LIKE -> post.get().setLikeCounter(post.get().getLikeCounter() + change);
+                case DISLIKE -> post.get().setDislikeCounter(post.get().getDislikeCounter() + change);
+
             }
-            post.get().setLikeCounter(post.get().getLikeCounter() + change);
             postRepository.save(post.get());
         }
     }

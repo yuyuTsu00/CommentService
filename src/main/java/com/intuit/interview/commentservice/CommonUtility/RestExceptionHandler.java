@@ -1,4 +1,4 @@
-package com.intuit.interview.commentservice;
+package com.intuit.interview.commentservice.CommonUtility;
 
 import com.intuit.interview.commentservice.Comment.Exception.CommentNotFoundException;
 import com.intuit.interview.commentservice.Post.Exception.PostNotFoundException;

@@ -12,16 +12,15 @@ import java.util.List;
 @Getter
 @Setter
 @ToString
-@NoArgsConstructor
+@Builder
 public class CommentThread {
     @MongoId
-    String commentThreadId;
-    String commentId;
-    String parentCommentThreadId = null;
-//    List<CommentThread> commentThreads;
-    String userId;
-    String postId;
-    Date startedOn = Date.from(Instant.now());
-    Date lastUpdatedON = Date.from(Instant.now());
-    boolean isActive = true;
+    private String threadId;
+    private String commentId;
+    private String parentThreadId ;
+    private String postId;
+    private String userId;
+    private Date startedOn;
+    private Date lastUpdatedON;
+    private boolean isActive;
 }

@@ -1,20 +1,16 @@
 package com.intuit.interview.commentservice.Post.Controller;
 
+import com.intuit.interview.commentservice.CommonUtility.PaginatedResponse;
+import com.intuit.interview.commentservice.Post.DTO.NewPostDto;
 import com.intuit.interview.commentservice.Post.Exception.PostNotFoundException;
 import com.intuit.interview.commentservice.Post.Service.PostService;
+import io.swagger.v3.oas.annotations.Operation;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.*;
 import com.intuit.interview.commentservice.Post.Model.Post;
-
-import java.util.List;
 
 @RestController
 @RequestMapping("post")
@@ -26,6 +22,7 @@ public class PostController {
         this.postService = postService;
     }
 
+    @Operation(summary = "get post by id", description = "post id should be valid")
     @GetMapping("/{id}")
     public ResponseEntity<Post> postDetails(@PathVariable("id") String postId) throws PostNotFoundException
     {
@@ -33,6 +30,7 @@ public class PostController {
         return new ResponseEntity<>(postService.postDetails(postId), HttpStatus.FOUND);
     }
 
+    @Operation(summary = "delete a post by id")
     @DeleteMapping("/{id}")
     public ResponseEntity<Post> deletePost(@PathVariable("id") String postId) throws PostNotFoundException
     {
@@ -40,13 +38,15 @@ public class PostController {
         return new ResponseEntity<>(postService.deletePost(postId), HttpStatus.OK);
     }
 
+    @Operation(summary = "create new post for a user")
     @PostMapping("/new")
-    public ResponseEntity<Post> newPost(@RequestBody Post post)
+    public ResponseEntity<Post> newPost(@RequestBody NewPostDto post)
     {
         // insert new post in the post table
         return new ResponseEntity<>(postService.newPost(post), HttpStatus.CREATED);
     }
 
+    @Operation(summary = "update an existing post")
     @PutMapping("/update")
     public ResponseEntity<Post> updatePost(@RequestBody Post post) throws PostNotFoundException
     {
@@ -54,9 +54,14 @@ public class PostController {
         return new ResponseEntity<>(postService.updatePost(post), HttpStatus.OK);
     }
 
+    @Operation(summary = "get all post of a user", description = "paginated response")
     @GetMapping("/user/{id}")
-    public ResponseEntity<List<Post>> getAllPostOfUser(@PathVariable("id") String userId)
+    public ResponseEntity<PaginatedResponse<Post>> getAllPostOfUser(@PathVariable("id") String userId, @RequestParam(required = false) Integer start, @RequestParam(required = false) Integer size)
     {
-        return new ResponseEntity<>(postService.getAllPostOfUser(userId), HttpStatus.FOUND);
+        int skip = start == null ? 0 : start;
+        int count = size == null ? 100 : size;
+
+        Pageable pageable = PageRequest.of(skip, count);
+        return new ResponseEntity<>(postService.getAllPostOfUser(userId, pageable), HttpStatus.FOUND);
     }
 }

@@ -1,4 +1,4 @@
-package com.intuit.interview.commentservice;
+package com.intuit.interview.commentservice.CommonUtility;
 
 import lombok.Builder;
 import lombok.Data;

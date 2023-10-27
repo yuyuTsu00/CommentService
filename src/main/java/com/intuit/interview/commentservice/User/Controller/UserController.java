@@ -1,7 +1,9 @@
 package com.intuit.interview.commentservice.User.Controller;
 
+import com.intuit.interview.commentservice.User.DTO.UserDto;
 import com.intuit.interview.commentservice.User.Exception.UserNotFoundException;
 import com.intuit.interview.commentservice.User.Service.UserService;
+import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -26,6 +28,7 @@ public class UserController {
         this.userService = userService;
     }
 
+    @Operation(summary = "Get User by userId", description = "userId should be valid")
     @GetMapping("/{id}")
     public ResponseEntity<User> userDetails(@PathVariable("id") String userId) throws UserNotFoundException
     {
@@ -33,12 +36,14 @@ public class UserController {
         return new ResponseEntity<>(userService.userDetails(userId), HttpStatus.FOUND);
     }
 
+    @Operation(summary = "get all users")
     @GetMapping()
     public ResponseEntity<List<User>> getAllUser()
     {
         return new ResponseEntity<>(userService.getAllUser(), HttpStatus.FOUND);
     }
 
+    @Operation(summary = "delete the user by userId", description = "userId should be valid")
     @DeleteMapping("/{id}")
     public ResponseEntity<User> deleteUser(@PathVariable("id") String userId) throws UserNotFoundException
     {
@@ -46,8 +51,10 @@ public class UserController {
         return new ResponseEntity<>(userService.deleteUser(userId), HttpStatus.OK);
     }
 
+
+    @Operation(summary = "Create new user")
     @PostMapping("/new")
-    public ResponseEntity<User> newUser(@RequestBody User user)
+    public ResponseEntity<User> newUser(@RequestBody UserDto user)
     {
         // insert new user in the user table
         return new ResponseEntity<>(userService.newUser(user), HttpStatus.CREATED);

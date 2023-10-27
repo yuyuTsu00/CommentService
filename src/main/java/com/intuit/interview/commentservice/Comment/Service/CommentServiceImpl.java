@@ -4,12 +4,12 @@ import com.intuit.interview.commentservice.Comment.Exception.CommentNotFoundExce
 import com.intuit.interview.commentservice.Constants.Emotion;
 import com.intuit.interview.commentservice.Comment.Model.Comment;
 import com.intuit.interview.commentservice.Comment.Model.CommentThread;
-import com.intuit.interview.commentservice.PaginatedResponse;
+import com.intuit.interview.commentservice.CommonUtility.PaginatedResponse;
 import com.intuit.interview.commentservice.Reaction.Model.Reaction;
 import com.intuit.interview.commentservice.Comment.Repository.CommentRepository;
 import com.intuit.interview.commentservice.Comment.Repository.CommentThreadRepository;
 import com.mongodb.BasicDBObject;
-import com.mongodb.DBObject;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import java.time.Instant;
@@ -39,40 +39,33 @@ public class CommentServiceImpl implements CommentService{
     }
 
     @Override
-    public Comment deleteComment(String commentId) throws CommentNotFoundException {
-        Optional<Comment> comment = commentRepository.findById(commentId);
+    public CommentThread deleteComment(String threadId) throws CommentNotFoundException {
+        Optional<CommentThread> commentThread = commentThreadRepository.findById(threadId);
 
-        if(comment.isEmpty())
+        if(commentThread.isEmpty())
             throw new CommentNotFoundException();
 
-        commentRepository.delete(comment.get());
-        return comment.get();
+        commentThread.get().setActive(false);
+        commentThread.get().setLastUpdatedON(Date.from(Instant.now()));
+        commentThreadRepository.save(commentThread.get());
+        return commentThread.get();
     }
 
-    public Comment addComment(Comment comment)
+    public Comment addComment(Comment comment, String postId, String userId, String threadId)
     {
         Comment insertedComment = commentRepository.insert(comment);
 
-        CommentThread commentThread = new CommentThread();
-        commentThread.setCommentId(insertedComment.getCommentId());
-        commentThread.setUserId(comment.getUserId());
-        commentThread.setPostId(comment.getPostId());
-//        commentThread.setCommentThreads(new ArrayList<>());
-        if(comment.getThreadId() != null)
-            commentThread.setParentCommentThreadId(comment.getThreadId());
+        CommentThread commentThread = CommentThread.builder()
+                                        .parentThreadId(threadId)
+                                        .commentId(insertedComment.getCommentId())
+                                        .postId(postId)
+                                        .userId(userId)
+                                        .isActive(true)
+                                        .build();
 
         CommentThread insertedCommentThread = commentThreadRepository.insert(commentThread);
         System.out.println(insertedComment);
         System.out.println(insertedCommentThread);
-//        if(comment.getParentCommentThreadId() != null)
-//        {
-//            Optional<CommentThread> parentCommentThread = commentThreadRepository.findById(comment.getParentCommentThreadId());
-//            System.out.println(parentCommentThread);
-//            if(parentCommentThread.isPresent()) {
-//                parentCommentThread.get().getCommentThreads().add(insertedCommentThread);
-//                commentThreadRepository.save(parentCommentThread.get());
-//            }
-//        }
 
         return insertedComment;
     }
@@ -103,45 +96,38 @@ public class CommentServiceImpl implements CommentService{
         if(comment.isPresent())
         {
             switch (emotion){
-                case LIKE : {
-                    comment.get().setLikeCounter(comment.get().getLikeCounter() + change);
-                    break;
-                }
-                case DISLIKE : {
-                    comment.get().setDislikeCounter(comment.get().getDislikeCounter() + change);
-                    break;
-                }
+                case LIKE -> comment.get().setLikeCounter(comment.get().getLikeCounter() + change);
+                case DISLIKE -> comment.get().setDislikeCounter(comment.get().getDislikeCounter() + change);
             }
-            comment.get().setLikeCounter(comment.get().getLikeCounter() + change);
             commentRepository.save(comment.get());
         }
     }
 
     public Comment updateComment(Comment comment) throws CommentNotFoundException
     {
-        Optional<Comment> dbcomment = commentRepository.findById(comment.getCommentId());
-        System.out.println(dbcomment);
+        Optional<Comment> dbComment = commentRepository.findById(comment.getCommentId());
+        System.out.println(dbComment);
 
-        if(dbcomment.isEmpty())
+        if(dbComment.isEmpty())
             throw new CommentNotFoundException();
 
 
-        dbcomment.get().setLastUpdatedON(Date.from(Instant.now()));
-        dbcomment.get().setMessage(comment.getMessage());
-        commentRepository.save(dbcomment.get());
+        dbComment.get().setLastUpdatedON(Date.from(Instant.now()));
+        dbComment.get().setMessage(comment.getMessage());
+        commentRepository.save(dbComment.get());
 
-        return dbcomment.get();
+        return dbComment.get();
     }
 
-    public PaginatedResponse<BasicDBObject> commentThreadsForPost(String postId, int start)
+    public PaginatedResponse<BasicDBObject> commentThreadsForPost(String postId, Pageable pageable)
     {
-        List<BasicDBObject> list = commentThreadRepository.commentThreadsForPost(postId, start, 100);
-        return PaginatedResponse.<BasicDBObject>builder().items(list).start(start+1).count(list.size()).build();
+        List<BasicDBObject> list = commentThreadRepository.commentThreadsForPost(postId, pageable);
+        return PaginatedResponse.<BasicDBObject>builder().items(list).start(pageable.getPageNumber() + 1).count(list.size()).build();
     }
 
-    public PaginatedResponse<BasicDBObject> commentThreadsForComment(String threadId, int start)
+    public PaginatedResponse<BasicDBObject> commentThreadsForComment(String threadId, Pageable pageable)
     {
-        List<BasicDBObject> list = commentThreadRepository.commentThreadsForComment(threadId, start, 100);
-        return PaginatedResponse.<BasicDBObject>builder().items(list).start(start+1).count(list.size()).build();
+        List<BasicDBObject> list = commentThreadRepository.commentThreadsForComment(threadId, pageable);
+        return PaginatedResponse.<BasicDBObject>builder().items(list).start(pageable.getPageNumber()+1).count(list.size()).build();
     }
 }

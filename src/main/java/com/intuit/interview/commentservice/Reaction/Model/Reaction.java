@@ -1,5 +1,6 @@
 package com.intuit.interview.commentservice.Reaction.Model;
 
+import lombok.Data;
 import lombok.Getter;
 import lombok.Setter;
 import lombok.ToString;
@@ -8,6 +9,8 @@ import org.springframework.data.mongodb.core.mapping.MongoId;
 import org.springframework.stereotype.Component;
 
 import java.sql.Timestamp;
+import java.time.Instant;
+import java.util.Date;
 
 @Document(collection = "reaction")
 @Getter
@@ -15,10 +18,10 @@ import java.sql.Timestamp;
 @ToString
 public class Reaction {
     @MongoId
-    String reactionId;
-    String userId;
-    String entityType;
-    String entityId;
-    Timestamp reactionTime;
-    String reactionType;
+    private String reactionId;
+    private String userId;
+    private String entityType;
+    private String entityId;
+    private Date reactionTime = Date.from(Instant.now());
+    private String reactionType;
 }
