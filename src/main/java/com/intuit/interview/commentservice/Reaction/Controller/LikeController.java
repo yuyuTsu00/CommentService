@@ -2,6 +2,7 @@ package com.intuit.interview.commentservice.Reaction.Controller;
 
 import com.intuit.interview.commentservice.Constants.Emotion;
 import com.intuit.interview.commentservice.Entity.EntityService;
+import com.intuit.interview.commentservice.Reaction.DTO.ReactionDto;
 import com.intuit.interview.commentservice.Reaction.Model.Reaction;
 import com.intuit.interview.commentservice.Reaction.Repository.ReactionRepository;
 import com.intuit.interview.commentservice.Reaction.Service.ReactionService;
@@ -23,14 +24,14 @@ public class LikeController implements ReactionController {
     }
 
     @Override
-    public ResponseEntity<String> doneReaction(Reaction reaction)
+    public ResponseEntity<String> doneReaction(ReactionDto reaction)
     {
         reactionService.doneReaction(reaction, Emotion.LIKE);
         return new ResponseEntity<>("success", HttpStatus.OK);
     }
 
     @Override
-    public ResponseEntity<String> undoneReaction(Reaction reaction) {
+    public ResponseEntity<String> undoneReaction(ReactionDto reaction) {
         reactionService.undoneReaction(reaction, Emotion.LIKE);
         return new ResponseEntity<>("success", HttpStatus.OK);
     }
