@@ -1,5 +1,6 @@
 package com.intuit.interview.commentservice.Comment.Controller;
 
+import com.intuit.interview.commentservice.Comment.DTO.NewCommentDto;
 import com.intuit.interview.commentservice.Comment.Exception.CommentNotFoundException;
 import com.intuit.interview.commentservice.Comment.Model.CommentThread;
 import com.intuit.interview.commentservice.Comment.Service.CommentService;
@@ -38,7 +39,7 @@ public class CommentController {
     public ResponseEntity<Comment> commentDetails(@PathVariable("id") String commentId) throws CommentNotFoundException
     {
         // fetch details from comment table and return
-        return new ResponseEntity<>(commentService.commentDetails(commentId), HttpStatus.FOUND);
+        return new ResponseEntity<>(commentService.commentDetails(commentId), HttpStatus.OK);
     }
 
     @Operation(summary = "delete a comment thread")
@@ -51,7 +52,7 @@ public class CommentController {
 
     @Operation(summary = "add new comment on a post / comment by a user")
     @PostMapping("/new")
-    public ResponseEntity<Comment> newComment(@RequestBody Comment comment, @RequestParam String postId, @RequestParam String userId, @RequestParam(required = false) String threadId)
+    public ResponseEntity<Comment> newComment(@RequestBody NewCommentDto comment, @RequestParam String postId, @RequestParam String userId, @RequestParam(required = false) String threadId)
     {
         // insert new comment in the comment table
         return new ResponseEntity<>(commentService.addComment(comment, postId, userId, threadId), HttpStatus.CREATED);
@@ -75,7 +76,7 @@ public class CommentController {
 
         Pageable pageable = PageRequest.of(skip, count);
 
-        return new ResponseEntity<>(commentService.commentThreadsForPost(postId, pageable), HttpStatus.FOUND);
+        return new ResponseEntity<>(commentService.commentThreadsForPost(postId, pageable), HttpStatus.OK);
     }
 
     @Operation(summary = "get all comment on a comment", description = "paginated response")
@@ -87,6 +88,6 @@ public class CommentController {
         int count = size == null ? 100 : size;
 
         Pageable pageable = PageRequest.of(skip, count);
-        return new ResponseEntity<>(commentService.commentThreadsForComment(commentThreadId, pageable), HttpStatus.FOUND);
+        return new ResponseEntity<>(commentService.commentThreadsForComment(commentThreadId, pageable), HttpStatus.OK);
     }
 }

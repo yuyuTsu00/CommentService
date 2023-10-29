@@ -7,6 +7,9 @@ import org.springframework.data.mongodb.core.annotation.Collation;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
+import java.time.Instant;
+import java.util.Date;
+
 @Document(collection = "user")
 @Getter
 @Setter
@@ -19,4 +22,5 @@ public class User {
     private String userName;
     private boolean isActive = true;
     private String profileUrl;
+    private Date createdOn = Date.from(Instant.now());
 }

@@ -2,10 +2,7 @@ package com.intuit.interview.commentservice.Comment.Model;
 
 import com.intuit.interview.commentservice.Constants.EntityType;
 import com.intuit.interview.commentservice.Entity.Entity;
-import lombok.Builder;
-import lombok.Getter;
-import lombok.Setter;
-import lombok.ToString;
+import lombok.*;
 import org.springframework.data.mongodb.core.mapping.Document;
 import org.springframework.data.mongodb.core.mapping.MongoId;
 
@@ -16,7 +13,7 @@ import java.util.Date;
 @Getter
 @Setter
 @ToString
-@Builder
+@NoArgsConstructor
 public class Comment implements Entity {
     @MongoId
     private String commentId;

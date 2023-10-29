@@ -33,14 +33,14 @@ public class UserController {
     public ResponseEntity<User> userDetails(@PathVariable("id") String userId) throws UserNotFoundException
     {
         // fetch details from user table and return
-        return new ResponseEntity<>(userService.userDetails(userId), HttpStatus.FOUND);
+        return new ResponseEntity<>(userService.userDetails(userId), HttpStatus.OK);
     }
 
     @Operation(summary = "get all users")
     @GetMapping()
     public ResponseEntity<List<User>> getAllUser()
     {
-        return new ResponseEntity<>(userService.getAllUser(), HttpStatus.FOUND);
+        return new ResponseEntity<>(userService.getAllUser(), HttpStatus.OK);
     }
 
     @Operation(summary = "delete the user by userId", description = "userId should be valid")

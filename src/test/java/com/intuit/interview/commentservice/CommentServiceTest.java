@@ -40,18 +40,28 @@ public class CommentServiceTest {
     @Before
     public void init()
     {
-        Comment comment = Comment.builder()
+        Comment comment = new Comment();
+        comment.setCommentId(testCommentId);
+        comment.setMessage("test comment");
+
+        CommentThread commentThread = CommentThread.builder()
+                .threadId(testThreadId)
+                .parentThreadId(null)
                 .commentId(testCommentId)
-                .message("test comment")
+                .postId(testPostId)
+                .userId(testUserId)
+                .isActive(true)
                 .build();
 
-        commentService.addComment(comment, testPostId, testUserId, null);
+        commentRepository.save(comment);
+        commentThreadRepository.save(commentThread);
     }
 
     @After
     public void destroy()
     {
         commentRepository.deleteById(testCommentId);
+        commentThreadRepository.deleteById(testThreadId);
     }
 
     @Test

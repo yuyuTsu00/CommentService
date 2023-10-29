@@ -92,32 +92,39 @@ public class PostServiceImpl implements PostService
         handleAction(reaction, 1, Emotion.LIKE);
     }
 
+
     public void handleUndoLike(Reaction reaction)
     {
         handleAction(reaction, -1, Emotion.LIKE);
     }
+
 
     public void handleDislike(Reaction reaction)
     {
         handleAction(reaction, 1, Emotion.DISLIKE);
     }
 
+
     public void handleUndoDislike(Reaction reaction)
     {
         handleAction(reaction, -1, Emotion.DISLIKE);
     }
 
-    private void handleAction(Reaction reaction, int change, Emotion emotion)
+
+    public void handleAction(Reaction reaction, int change, Emotion emotion)
     {
         Optional<Post> post = postRepository.findById(reaction.getEntityId());
-        if(post.isPresent())
-        {
-            switch (emotion){
-                case LIKE -> post.get().setLikeCounter(post.get().getLikeCounter() + change);
-                case DISLIKE -> post.get().setDislikeCounter(post.get().getDislikeCounter() + change);
+        post.ifPresent(value -> updateCounter(value, change, emotion));
+    }
 
-            }
-            postRepository.save(post.get());
+    @CachePut("post")
+    public void updateCounter(Post post, int change, Emotion emotion)
+    {
+        switch (emotion){
+            case LIKE -> post.setLikeCounter(post.getLikeCounter() + change);
+            case DISLIKE -> post.setDislikeCounter(post.getDislikeCounter() + change);
+
         }
+        postRepository.save(post);
     }
 }

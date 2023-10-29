@@ -20,11 +20,13 @@ public class Post implements Entity, Serializable {
     @MongoId
     private String postId;
     private String userId;
+    private String postMessage;
+
     private Date postedOn = Date.from(Instant.now());
     private Date lastUpdatedON = Date.from(Instant.now());
+
     private int likeCounter = 0;
     private int dislikeCounter = 0;
-    private String postMessage;
     private String shareLink;
     private String entityType = EntityType.POST.toString();
     private boolean isActive = true;

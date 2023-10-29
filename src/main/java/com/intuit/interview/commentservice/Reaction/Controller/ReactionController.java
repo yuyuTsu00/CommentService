@@ -1,6 +1,7 @@
 package com.intuit.interview.commentservice.Reaction.Controller;
 
 import com.intuit.interview.commentservice.Reaction.Model.Reaction;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
@@ -8,8 +9,8 @@ import org.springframework.web.bind.annotation.RequestMapping;
 public interface ReactionController {
 
     @PostMapping("/")
-    public void doneReaction(Reaction reaction);
+    ResponseEntity<String> doneReaction(Reaction reaction);
 
     @PostMapping("/undone")
-    public void undoneReaction(Reaction reaction);
+    ResponseEntity<String> undoneReaction(Reaction reaction);
 }

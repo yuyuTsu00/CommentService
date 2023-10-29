@@ -27,7 +27,7 @@ public class PostController {
     public ResponseEntity<Post> postDetails(@PathVariable("id") String postId) throws PostNotFoundException
     {
         // fetch details from post table and return
-        return new ResponseEntity<>(postService.postDetails(postId), HttpStatus.FOUND);
+        return new ResponseEntity<>(postService.postDetails(postId), HttpStatus.OK);
     }
 
     @Operation(summary = "delete a post by id")
@@ -62,6 +62,6 @@ public class PostController {
         int count = size == null ? 100 : size;
 
         Pageable pageable = PageRequest.of(skip, count);
-        return new ResponseEntity<>(postService.getAllPostOfUser(userId, pageable), HttpStatus.FOUND);
+        return new ResponseEntity<>(postService.getAllPostOfUser(userId, pageable), HttpStatus.OK);
     }
 }

@@ -12,8 +12,8 @@ public interface CommentThreadRepository extends MongoRepository<CommentThread, 
 
     @Aggregation(pipeline = {
             "{$lookup:{from: 'comment',localField: 'commentId',foreignField: '_id', as: 'commentobject'}}",
-            "{$lookup:{from: 'user',localField: 'commentobject.userId',foreignField: '_id', as: 'userobject'}}",
-            "{$match:   {postId: '?0'}}",
+            "{$lookup:{from: 'user',localField: 'userId',foreignField: '_id', as: 'userobject'}}",
+            "{$match:   {postId: '?0', isActive:  true}}",
             "{$sort: { startedOn : -1 }}"
     })
     List<BasicDBObject> commentThreadsForPost(String postId, Pageable pageable);
@@ -21,9 +21,9 @@ public interface CommentThreadRepository extends MongoRepository<CommentThread, 
 
     @Aggregation(pipeline = {
             "{$lookup:{from: 'comment',localField: 'commentId',foreignField: '_id', as: 'commentobject'}}",
-            "{$lookup:{from: 'user',localField: 'commentobject.userId',foreignField: '_id', as: 'userobject'}}",
-            "{$match:   {parentCommentThreadId: '?0'}}",
-            "{$orderby: { startedOn : -1 }}"
+            "{$lookup:{from: 'user',localField: 'userId',foreignField: '_id', as: 'userobject'}}",
+            "{$match:   {parentThreadId: '?0', isActive:  true}}",
+            "{$sort: { startedOn : -1 }}"
     })
     List<BasicDBObject> commentThreadsForComment(String parentCommentThreadId, Pageable pageable);
 }
