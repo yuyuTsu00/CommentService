@@ -17,10 +17,10 @@ public class CommentThread {
     @MongoId
     private String threadId;
     private String commentId;
-    private String parentThreadId ;
+    private String parentThreadId;
     private String postId;
     private String userId;
-    private Date startedOn;
-    private Date lastUpdatedON;
-    private boolean isActive;
+    private Date startedOn = Date.from(Instant.now());
+    private Date lastUpdatedON = Date.from(Instant.now());
+    private boolean isActive = true;
 }

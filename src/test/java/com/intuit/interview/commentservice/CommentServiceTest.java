@@ -1,5 +1,6 @@
 package com.intuit.interview.commentservice;
 
+import com.intuit.interview.commentservice.Comment.DTO.CommentThreadDto;
 import com.intuit.interview.commentservice.Comment.Model.Comment;
 import com.intuit.interview.commentservice.Comment.Model.CommentThread;
 import com.intuit.interview.commentservice.Comment.Repository.CommentRepository;
@@ -74,7 +75,7 @@ public class CommentServiceTest {
     @Test
     public void testCommentThreadForPost()
     {
-        PaginatedResponse<BasicDBObject> comments = commentService.commentThreadsForPost(testPostId, PageRequest.of(0, 5));
+        PaginatedResponse<CommentThreadDto> comments = commentService.commentThreadsForPost(testPostId, PageRequest.of(0, 5));
         Assert.assertTrue(!comments.getItems().isEmpty());
     }
 
@@ -82,7 +83,7 @@ public class CommentServiceTest {
     @Test
     public void testCommentThreadForComment()
     {
-        PaginatedResponse<BasicDBObject> comments = commentService.commentThreadsForComment(testThreadId, PageRequest.of(0, 5));
+        PaginatedResponse<CommentThreadDto> comments = commentService.commentThreadsForComment(testThreadId, PageRequest.of(0, 5));
         Assert.assertTrue(!comments.getItems().isEmpty());
     }
 

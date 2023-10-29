@@ -1,5 +1,6 @@
 package com.intuit.interview.commentservice.Comment.Service;
 
+import com.intuit.interview.commentservice.Comment.DTO.CommentThreadDto;
 import com.intuit.interview.commentservice.Comment.DTO.NewCommentDto;
 import com.intuit.interview.commentservice.Comment.Exception.CommentNotFoundException;
 import com.intuit.interview.commentservice.Comment.Model.Comment;
@@ -15,6 +16,6 @@ public interface CommentService extends EntityService {
     CommentThread deleteComment(String threadId) throws CommentNotFoundException;
     Comment addComment(NewCommentDto comment, String postId, String userId, String threadId);
     Comment updateComment(Comment comment) throws CommentNotFoundException;
-    PaginatedResponse<BasicDBObject> commentThreadsForPost(String postId, Pageable pageable);
-    PaginatedResponse<BasicDBObject> commentThreadsForComment(String threadId, Pageable pageable);
+    PaginatedResponse<CommentThreadDto> commentThreadsForPost(String postId, Pageable pageable);
+    PaginatedResponse<CommentThreadDto> commentThreadsForComment(String threadId, Pageable pageable);
 }

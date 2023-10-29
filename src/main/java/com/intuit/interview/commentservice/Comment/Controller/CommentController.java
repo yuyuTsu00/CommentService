@@ -1,5 +1,6 @@
 package com.intuit.interview.commentservice.Comment.Controller;
 
+import com.intuit.interview.commentservice.Comment.DTO.CommentThreadDto;
 import com.intuit.interview.commentservice.Comment.DTO.NewCommentDto;
 import com.intuit.interview.commentservice.Comment.Exception.CommentNotFoundException;
 import com.intuit.interview.commentservice.Comment.Model.CommentThread;
@@ -9,6 +10,7 @@ import com.mongodb.BasicDBObject;
 import io.swagger.v3.oas.annotations.Operation;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.RestController;
@@ -68,12 +70,11 @@ public class CommentController {
 
     @Operation(summary = "get all comment on a post", description = "paginated response")
     @GetMapping("/post/{id}")
-    public ResponseEntity<PaginatedResponse<BasicDBObject>> commentThreadsForPost(@PathVariable("id") String postId, @RequestParam(required = false) Integer start, @RequestParam(required = false) Integer size)
+    public ResponseEntity<PaginatedResponse<CommentThreadDto>> commentThreadsForPost(@PathVariable("id") String postId, @RequestParam(required = false) Integer start, @RequestParam(required = false) Integer size)
     {
         // fetch details from comment table and return
         int skip = start == null ? 0 : start;
         int count = size == null ? 100 : size;
-
         Pageable pageable = PageRequest.of(skip, count);
 
         return new ResponseEntity<>(commentService.commentThreadsForPost(postId, pageable), HttpStatus.OK);
@@ -81,7 +82,7 @@ public class CommentController {
 
     @Operation(summary = "get all comment on a comment", description = "paginated response")
     @GetMapping("/comment/{id}")
-    public ResponseEntity<PaginatedResponse<BasicDBObject>> commentThreadsForComment(@PathVariable("id") String commentThreadId, @RequestParam(required = false) Integer start, @RequestParam(required = false) Integer size)
+    public ResponseEntity<PaginatedResponse<CommentThreadDto>> commentThreadsForComment(@PathVariable("id") String commentThreadId, @RequestParam(required = false) Integer start, @RequestParam(required = false) Integer size)
     {
         // fetch details from user table and return
         int skip = start == null ? 0 : start;
