@@ -36,15 +36,12 @@ public class CommentServiceTest {
         comment.setCommentId(testCommentId);
         comment.setMessage("test comment");
 
-        CommentThread commentThread =
-                CommentThread.builder()
-                        .threadId(testThreadId)
-                        .parentThreadId(null)
-                        .commentId(testCommentId)
-                        .postId(testPostId)
-                        .userId(testUserId)
-                        .isActive(true)
-                        .build();
+        CommentThread commentThread = new CommentThread();
+        commentThread.setPostId(testPostId);
+        commentThread.setThreadId(testThreadId);
+        commentThread.setParentThreadId(null);
+        commentThread.setCommentId(testCommentId);
+        commentThread.setUserId(testUserId);
 
         commentRepository.save(comment);
         commentThreadRepository.save(commentThread);
